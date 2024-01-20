@@ -1,8 +1,11 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
 import { PopulationGraph } from "./PopulationGraph";
 import { PrefectureData } from "../../types/prefecturesData";
-import { PopulationData } from "../../types/populationData";
+import {
+  PopulationData,
+  SelectedPopulationData,
+} from "../../types/populationData";
 import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
 
 const prefectureData: PrefectureData = {
@@ -498,9 +501,24 @@ export const MainContents: FC = memo(() => {
   const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
   const [selectedPopulationType, setSelectedPopulationType] =
     useState<string>("");
-  const selectedPopulationData = populationData.result.data.find(
-    (category) => category.label === selectedPopulationType
-  );
+  const [selectedPopulationDatas, setSelectedPopulationDatas] = useState<
+    SelectedPopulationData[]
+  >([]);
+
+  useEffect(() => {
+    setSelectedPopulationDatas([]);
+    selectedPrefectures.forEach((selectedPrefecture) => {
+      const prefName = prefectureData.result.find(
+        (pref) => pref.prefCode === selectedPrefecture
+      )?.prefName;
+      const selectedData: SelectedPopulationData = {
+        data: populationData,
+        prefCode: selectedPrefecture,
+        prefName: prefName !== undefined ? prefName : "",
+      };
+      setSelectedPopulationDatas([...selectedPopulationDatas, selectedData]);
+    });
+  }, [selectedPrefectures]);
 
   const handleToggleCheckbox = (prefCode: number) => {
     const isSelected = selectedPrefectures.includes(prefCode);
@@ -531,8 +549,11 @@ export const MainContents: FC = memo(() => {
         selectedPopulationType={selectedPopulationType}
         onChange={handleCheckRadioButton}
       />
-      {selectedPopulationData && (
-        <PopulationGraph populationData={selectedPopulationData} />
+      {selectedPopulationDatas && (
+        <PopulationGraph
+          populationDatas={selectedPopulationDatas}
+          selectedPopulationType={selectedPopulationType}
+        />
       )}
     </main>
   );

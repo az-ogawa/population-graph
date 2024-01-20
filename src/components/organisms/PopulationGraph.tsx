@@ -8,21 +8,26 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Population } from "../../types/populationData";
+import { DataItem, SelectedPopulationData } from "../../types/populationData";
 
 type PopulationGraphProps = {
-  populationData: Population;
+  populationDatas: SelectedPopulationData[];
+  selectedPopulationType: String;
 };
 
 export const PopulationGraph: FC<PopulationGraphProps> = memo((props) => {
-  const { populationData } = props;
+  const { populationDatas, selectedPopulationType } = props;
+  const filteredData: DataItem[] = populationDatas
+    .flatMap((data) => data.data.result.data)
+    .filter((pop) => pop.label === selectedPopulationType)
+    .flatMap((pop) => pop.data);
 
   return (
     <div className="container">
       <LineChart
         width={700}
         height={300}
-        data={populationData.data}
+        data={filteredData}
         margin={{
           top: 30,
           right: 30,
@@ -44,7 +49,15 @@ export const PopulationGraph: FC<PopulationGraphProps> = memo((props) => {
             position: "insideLeft",
           }}
         />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+        {populationDatas.map((populationData) => (
+          <Line
+            key={populationData.prefCode}
+            type="monotone"
+            dataKey="value"
+            name={`${populationData.prefName}`}
+            stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+          />
+        ))}
         <Legend />
         <Tooltip />
       </LineChart>

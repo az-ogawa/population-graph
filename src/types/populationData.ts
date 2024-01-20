@@ -1,4 +1,4 @@
-type DataItem = {
+export type DataItem = {
   year: number;
   value: number;
   rate?: number; // オプショナルなフィールド
@@ -17,4 +17,10 @@ type PopulationResult = {
 export type PopulationData = {
   message: null;
   result: PopulationResult;
+};
+
+export type SelectedPopulationData = {
+  prefCode: number;
+  prefName: String;
+  data: PopulationData;
 };
