@@ -6,5 +6,5 @@ type Props = {
 
 export const AreaTitleLabel: FC<Props> = memo((props) => {
   const { children } = props;
-  return <h3>{children}</h3>;
+  return <h2>{children}</h2>;
 });

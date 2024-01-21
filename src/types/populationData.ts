@@ -21,6 +21,6 @@ export type PopulationData = {
 
 export type SelectedPopulationData = {
   prefCode: number;
-  prefName: String;
+  prefName: string;
   data: PopulationData;
 };

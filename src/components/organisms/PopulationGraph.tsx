@@ -4,30 +4,37 @@ import {
   Legend,
   Line,
   LineChart,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { DataItem, SelectedPopulationData } from "../../types/populationData";
+import { SelectedPopulationData } from "../../types/populationData";
+import {
+  extractGraphData,
+  mergeGraphData,
+} from "../../utils/populationGraphUtils";
 
 type PopulationGraphProps = {
   populationDatas: SelectedPopulationData[];
-  selectedPopulationType: String;
+  selectedPopulationType: string;
 };
 
 export const PopulationGraph: FC<PopulationGraphProps> = memo((props) => {
   const { populationDatas, selectedPopulationType } = props;
-  const filteredData: DataItem[] = populationDatas
-    .flatMap((data) => data.data.result.data)
-    .filter((pop) => pop.label === selectedPopulationType)
-    .flatMap((pop) => pop.data);
+  // 選択された人口種別に対応するデータを抽出
+  const selectedData = extractGraphData(
+    populationDatas,
+    selectedPopulationType
+  );
+
+  // グラフ表示用データをマージして作成
+  const mergedChartData = mergeGraphData(selectedData);
 
   return (
-    <div className="container">
+    <ResponsiveContainer width="100%" height={300} className="graph-container">
       <LineChart
-        width={700}
-        height={300}
-        data={filteredData}
+        data={mergedChartData}
         margin={{
           top: 30,
           right: 30,
@@ -41,7 +48,6 @@ export const PopulationGraph: FC<PopulationGraphProps> = memo((props) => {
           label={{ value: "年度", offset: -5, position: "insideBottomRight" }}
         />
         <YAxis
-          dataKey="value"
           label={{
             value: "人口数",
             offset: -20,
@@ -49,18 +55,18 @@ export const PopulationGraph: FC<PopulationGraphProps> = memo((props) => {
             position: "insideLeft",
           }}
         />
-        {populationDatas.map((populationData) => (
+        {selectedData.map((data) => (
           <Line
-            key={populationData.prefCode}
+            key={data.prefCode}
             type="monotone"
-            dataKey="value"
-            name={`${populationData.prefName}`}
-            stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+            dataKey={data.prefName}
+            name={data.prefName}
+            stroke={data.color}
           />
         ))}
         <Legend />
         <Tooltip />
       </LineChart>
-    </div>
+    </ResponsiveContainer>
   );
 });

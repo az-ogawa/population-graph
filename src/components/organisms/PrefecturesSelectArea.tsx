@@ -14,17 +14,19 @@ export const PrefecturesSelectArea: FC<PrefectureProps> = memo((props) => {
   return (
     <>
       <AreaTitleLabel>都道府県</AreaTitleLabel>
-      {prefectureData &&
-        prefectureData.result &&
-        prefectureData.result.map((prefecture) => (
-          <PrefecturesCheckBox
-            key={prefecture.prefCode}
-            prefCode={prefecture.prefCode}
-            value={prefecture.prefName}
-            onChange={onChange}
-            checked={selectedPrefectures.includes(prefecture.prefCode)}
-          />
-        ))}
+      <div className="custom-checkbox-container">
+        {prefectureData &&
+          prefectureData.result &&
+          prefectureData.result.map((prefecture) => (
+            <PrefecturesCheckBox
+              key={prefecture.prefCode}
+              prefCode={prefecture.prefCode}
+              value={prefecture.prefName}
+              onChange={onChange}
+              checked={selectedPrefectures.includes(prefecture.prefCode)}
+            />
+          ))}
+      </div>
     </>
   );
 });

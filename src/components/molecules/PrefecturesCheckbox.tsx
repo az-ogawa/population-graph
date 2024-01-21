@@ -21,6 +21,7 @@ export const PrefecturesCheckBox: FC<CheckBoxProps> = memo((props) => {
   return (
     <label>
       <input
+        className="custom-checkbox"
         type="checkbox"
         disabled={disabled || loading}
         onChange={() => onChange(prefCode)}
