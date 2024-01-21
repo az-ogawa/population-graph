@@ -322,7 +322,11 @@ export const MainContents: FC = memo(() => {
       .then((results) => {
         setPreFectures(results.data);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log("都道府県取得エラー:", error);
+
+        window.alert("都道府県情報の取得に失敗しました。");
+      });
   }, []);
 
   useEffect(() => {
