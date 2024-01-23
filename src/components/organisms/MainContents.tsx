@@ -93,7 +93,7 @@ export const MainContents: FC = memo(() => {
         selectedPrefectures={selectedPrefectures}
         onChange={handleToggleCheckbox}
       />
-      {selectedPopulationDatas.length && (
+      {selectedPopulationDatas.length !== 0 && (
         <>
           <PopulationTypeSelectArea
             populationTypes={selectedPopulationDatas[0].data.result.data.map(
