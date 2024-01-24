@@ -1,11 +1,10 @@
 import { FC, memo, useEffect, useState } from "react";
-import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
-import { PopulationGraph } from "./PopulationGraph";
-import { PrefectureData } from "../../types/prefecturesData";
 import { SelectedPopulationData } from "../../types/populationData";
-import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
-import axios from "axios";
+import { PrefectureData } from "../../types/prefecturesData";
 import { getPrefectureNameByCode } from "../../utils/util";
+import { PopulationGraph } from "./PopulationGraph";
+import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
+import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
 
 export const MainContents: FC = memo(() => {
   const [prefectures, setPreFectures] = useState<PrefectureData | null>(null);
@@ -18,18 +17,19 @@ export const MainContents: FC = memo(() => {
 
   useEffect(() => {
     // 都道府県一覧を取得する
-    axios
-      .get("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
-        headers: { "X-API-KEY": process.env.REACT_APP_API_KEY },
-      })
-      .then((results) => {
-        setPreFectures(results.data);
-      })
-      .catch((error) => {
-        console.log("都道府県取得エラー:", error);
+    const apiUrl = "/api/prefectures";
 
-        window.alert("都道府県情報の取得に失敗しました。");
-      });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        setPreFectures(data);
+      } catch (error) {
+        console.error("Error fetching prefectures data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleToggleCheckbox = (prefCode: number) => {
@@ -50,16 +50,12 @@ export const MainContents: FC = memo(() => {
       setSelectedPrefectures([...selectedPrefectures, prefCode]);
 
       // チェックをつけた都道府県のデータを取得
-      axios
-        .get(
-          `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${String(
-            prefCode
-          )}`,
-          {
-            headers: { "X-API-KEY": process.env.REACT_APP_API_KEY },
-          }
-        )
-        .then((results) => {
+      const apiUrl = `/api/population?prefCode=${prefCode}`;
+
+      const fetchData = async () => {
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
           const prefName = prefectures
             ? getPrefectureNameByCode(prefectures, prefCode)
             : "";
@@ -67,18 +63,18 @@ export const MainContents: FC = memo(() => {
           const populationData: SelectedPopulationData = {
             prefCode: prefCode,
             prefName: prefName,
-            data: results.data,
+            data: data,
           };
           setSelectedPopulationDatas([
             ...selectedPopulationDatas,
             populationData,
           ]);
-        })
-        .catch((error) => {
-          console.log("人口取得エラー:", error);
+        } catch (error) {
+          console.error("Error fetching population data:", error);
+        }
+      };
 
-          window.alert("人口情報の取得に失敗しました。");
-        });
+      fetchData();
     }
   };
 

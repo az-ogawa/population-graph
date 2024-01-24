@@ -4,6 +4,5 @@ type Prefecture = {
 };
 
 export type PrefectureData = {
-  message: null;
   result: Prefecture[];
 };
