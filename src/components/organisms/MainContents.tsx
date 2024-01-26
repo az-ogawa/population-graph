@@ -5,8 +5,10 @@ import { getPrefectureNameByCode } from "../../utils/util";
 import { PopulationGraph } from "./PopulationGraph";
 import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
 import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
+import { LoadingIndicator } from "../molecules/LoadingIndicator";
 
 export const MainContents: FC = memo(() => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [prefectures, setPreFectures] = useState<PrefectureData | null>(null);
   const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
   const [selectedPopulationType, setSelectedPopulationType] =
@@ -19,11 +21,14 @@ export const MainContents: FC = memo(() => {
     // 都道府県一覧を取得する
     const apiUrl = "/api/prefectures";
 
+    setIsLoading(true);
+
     const fetchData = async () => {
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
         setPreFectures(data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching prefectures data:", error);
       }
@@ -84,11 +89,15 @@ export const MainContents: FC = memo(() => {
 
   return (
     <main>
-      <PrefecturesSelectArea
-        prefectureData={prefectures}
-        selectedPrefectures={selectedPrefectures}
-        onChange={handleToggleCheckbox}
-      />
+      {isLoading ? (
+        <LoadingIndicator />
+      ) : (
+        <PrefecturesSelectArea
+          prefectureData={prefectures}
+          selectedPrefectures={selectedPrefectures}
+          onChange={handleToggleCheckbox}
+        />
+      )}
       {selectedPopulationDatas.length !== 0 && (
         <>
           <PopulationTypeSelectArea
