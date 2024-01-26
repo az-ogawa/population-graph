@@ -30,6 +30,11 @@ h2:after {
   background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
 }
 
+.graph-container {
+  background-color: white;
+  margin-top: 10px;
+}
+
 .custom-checkbox-container {
   display: flex;
   flex-wrap: wrap;
@@ -87,11 +92,6 @@ h2:after {
   border: solid white;
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
-}
-
-.graph-container {
-  background-color: white;
-  margin-top: 10px;
 }
 
 @media screen and (width <=768px) {
