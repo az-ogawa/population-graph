@@ -10,7 +10,9 @@ import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
 export const MainContents: FC = memo(() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [prefectures, setPreFectures] = useState<PrefectureData | null>(null);
-  const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
+  const [selectedPrefectureCodes, setSelectedPrefectureCodes] = useState<
+    number[]
+  >([]);
   const [selectedPopulationType, setSelectedPopulationType] =
     useState<string>("");
   const [selectedPopulationDatas, setSelectedPopulationDatas] = useState<
@@ -38,10 +40,10 @@ export const MainContents: FC = memo(() => {
   }, []);
 
   const handleToggleCheckbox = (prefCode: number) => {
-    const isSelected = selectedPrefectures.includes(prefCode);
+    const isSelected = selectedPrefectureCodes.includes(prefCode);
     if (isSelected) {
-      setSelectedPrefectures(
-        selectedPrefectures.filter((code) => code !== prefCode)
+      setSelectedPrefectureCodes(
+        selectedPrefectureCodes.filter((code) => code !== prefCode)
       );
 
       // 取得データからチェックを解除したデータを除外
@@ -52,7 +54,7 @@ export const MainContents: FC = memo(() => {
         )
       );
     } else {
-      setSelectedPrefectures([...selectedPrefectures, prefCode]);
+      setSelectedPrefectureCodes([...selectedPrefectureCodes, prefCode]);
 
       // チェックをつけた都道府県のデータを取得
       const apiUrl = `/api/population?prefCode=${prefCode}`;
@@ -94,7 +96,7 @@ export const MainContents: FC = memo(() => {
       ) : (
         <PrefecturesSelectArea
           prefectureData={prefectures}
-          selectedPrefectures={selectedPrefectures}
+          selectedPrefectures={selectedPrefectureCodes}
           onChange={handleToggleCheckbox}
         />
       )}
