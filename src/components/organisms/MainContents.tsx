@@ -2,10 +2,10 @@ import { FC, memo, useEffect, useState } from "react";
 import { SelectedPopulationData } from "../../types/populationData";
 import { PrefectureData } from "../../types/prefecturesData";
 import { getPrefectureNameByCode } from "../../utils/util";
+import { LoadingIndicator } from "../molecules/LoadingIndicator";
 import { PopulationGraph } from "./PopulationGraph";
 import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
 import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
-import { LoadingIndicator } from "../molecules/LoadingIndicator";
 
 export const MainContents: FC = memo(() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,7 +30,7 @@ export const MainContents: FC = memo(() => {
         setPreFectures(data);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching prefectures data:", error);
+        console.error("データの取得に失敗しました");
       }
     };
 
