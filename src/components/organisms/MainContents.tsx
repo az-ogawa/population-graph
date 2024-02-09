@@ -1,5 +1,8 @@
 import { FC, memo, useEffect, useState } from "react";
-import { SelectedPopulationData } from "../../types/populationData";
+import {
+  PopulationData,
+  SelectedPopulationData,
+} from "../../types/populationData";
 import { PrefectureData } from "../../types/prefecturesData";
 import { getPrefectureNameByCode } from "../../utils/util";
 import { LoadingIndicator } from "../molecules/LoadingIndicator";
@@ -39,6 +42,16 @@ export const MainContents: FC = memo(() => {
     fetchData();
   }, []);
 
+  /**
+   * 指定した都道府県の人口データ取得
+   * @param prefCode
+   * @returns
+   */
+  const fetchPopulationData = async (prefCode: number) => {
+    const response = await fetch(`/api/population?prefCode=${prefCode}`);
+    return (await response.json()) as PopulationData;
+  };
+
   const handleToggleCheckbox = (prefCode: number) => {
     const isSelected = selectedPrefectureCodes.includes(prefCode);
     if (isSelected) {
@@ -57,12 +70,9 @@ export const MainContents: FC = memo(() => {
 
     setSelectedPrefectureCodes([...selectedPrefectureCodes, prefCode]);
     // チェックをつけた都道府県のデータを取得
-    const apiUrl = `/api/population?prefCode=${prefCode}`;
-
     const fetchData = async () => {
       try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+        const data = await fetchPopulationData(prefCode);
         const prefName = prefectures
           ? getPrefectureNameByCode(prefectures, prefCode)
           : "";
