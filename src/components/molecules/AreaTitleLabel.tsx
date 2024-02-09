@@ -1,10 +1,10 @@
-import { FC, ReactNode, memo } from "react";
+import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
-export const AreaTitleLabel: FC<Props> = memo((props) => {
+export const AreaTitleLabel = (props: Props) => {
   const { children } = props;
   return <h2>{children}</h2>;
-});
+};
