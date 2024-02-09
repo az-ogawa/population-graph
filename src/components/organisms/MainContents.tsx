@@ -53,36 +53,35 @@ export const MainContents: FC = memo(() => {
             selectedPopulationData.prefCode !== prefCode
         )
       );
-    } else {
-      setSelectedPrefectureCodes([...selectedPrefectureCodes, prefCode]);
-
-      // チェックをつけた都道府県のデータを取得
-      const apiUrl = `/api/population?prefCode=${prefCode}`;
-
-      const fetchData = async () => {
-        try {
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-          const prefName = prefectures
-            ? getPrefectureNameByCode(prefectures, prefCode)
-            : "";
-
-          const populationData: SelectedPopulationData = {
-            prefCode: prefCode,
-            prefName: prefName,
-            data: data,
-          };
-          setSelectedPopulationDatas([
-            ...selectedPopulationDatas,
-            populationData,
-          ]);
-        } catch (error) {
-          console.error("Error fetching population data:", error);
-        }
-      };
-
-      fetchData();
     }
+
+    setSelectedPrefectureCodes([...selectedPrefectureCodes, prefCode]);
+    // チェックをつけた都道府県のデータを取得
+    const apiUrl = `/api/population?prefCode=${prefCode}`;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        const prefName = prefectures
+          ? getPrefectureNameByCode(prefectures, prefCode)
+          : "";
+
+        const populationData: SelectedPopulationData = {
+          prefCode: prefCode,
+          prefName: prefName,
+          data: data,
+        };
+        setSelectedPopulationDatas([
+          ...selectedPopulationDatas,
+          populationData,
+        ]);
+      } catch (error) {
+        console.error("Error fetching population data:", error);
+      }
+    };
+
+    fetchData();
   };
 
   const handleCheckRadioButton = (selectedPopulationType: string) => {
