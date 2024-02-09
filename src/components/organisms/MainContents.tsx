@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from "react";
+import { ChangeEventHandler, FC, memo, useEffect, useState } from "react";
 import {
   PopulationData,
   SelectedPopulationData,
@@ -94,8 +94,8 @@ export const MainContents: FC = memo(() => {
     fetchData();
   };
 
-  const handleCheckRadioButton = (selectedPopulationType: string) => {
-    setSelectedPopulationType(selectedPopulationType);
+  const handleCheckRadioButton: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSelectedPopulationType(e.target.value);
   };
 
   return (

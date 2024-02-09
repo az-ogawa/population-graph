@@ -1,11 +1,11 @@
-import { FC, memo } from "react";
+import { ChangeEventHandler, FC, memo } from "react";
 
 type RadioButtonProps = {
   value: string;
   disabled?: boolean;
   loading?: boolean;
   selectedValue: string;
-  onChange: (selectedPopulationType: string) => void;
+  onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 export const PopulationTypeRadioButton: FC<RadioButtonProps> = memo((props) => {
@@ -21,8 +21,9 @@ export const PopulationTypeRadioButton: FC<RadioButtonProps> = memo((props) => {
       <input
         type="radio"
         name="radioGroup"
+        value={value}
         disabled={disabled || loading}
-        onChange={() => onChange(value)}
+        onChange={(e) => onChange(e)}
         checked={value === selectedValue}
       />
       {value}

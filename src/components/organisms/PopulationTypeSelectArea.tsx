@@ -1,11 +1,11 @@
-import { FC, memo } from "react";
+import { ChangeEventHandler, FC, memo } from "react";
 import { AreaTitleLabel } from "../atoms/AreaTitleLabel";
 import { PopulationTypeRadioButton } from "../molecules/PopulationTypeRadioButton";
 
 type PrefectureProps = {
   populationTypes: string[];
   selectedPopulationType: string;
-  onChange: (selectedPopulationType: string) => void;
+  onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 export const PopulationTypeSelectArea: FC<PrefectureProps> = memo((props) => {
