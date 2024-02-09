@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { AreaTitleLabel } from "../molecules/AreaTitleLabel";
+import { AreaTitleLabel } from "../atoms/AreaTitleLabel";
 import { PopulationTypeRadioButton } from "../molecules/PopulationTypeRadioButton";
 
 type PrefectureProps = {
@@ -12,7 +12,7 @@ export const PopulationTypeSelectArea: FC<PrefectureProps> = memo((props) => {
   const { populationTypes, selectedPopulationType, onChange } = props;
   return (
     <>
-      <AreaTitleLabel>人口種別</AreaTitleLabel>
+      <AreaTitleLabel title="人口種別" />
       {populationTypes.map((populationType, index) => (
         <PopulationTypeRadioButton
           key={index}
