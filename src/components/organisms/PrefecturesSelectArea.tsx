@@ -1,7 +1,7 @@
 import { FC, memo } from "react";
-import { PrefecturesCheckBox } from "../molecules/PrefecturesCheckbox";
-import { AreaTitleLabel } from "../molecules/AreaTitleLabel";
 import { PrefectureData } from "../../types/prefecturesData";
+import { AreaTitleLabel } from "../atoms/AreaTitleLabel";
+import { PrefecturesCheckBox } from "../molecules/PrefecturesCheckbox";
 
 type PrefectureProps = {
   prefectureData: PrefectureData | null;
@@ -13,7 +13,7 @@ export const PrefecturesSelectArea: FC<PrefectureProps> = memo((props) => {
   const { prefectureData, selectedPrefectures, onChange } = props;
   return (
     <>
-      <AreaTitleLabel>都道府県</AreaTitleLabel>
+      <AreaTitleLabel title="都道府県" />
       <div className="custom-checkbox-container">
         {prefectureData &&
           prefectureData.result &&

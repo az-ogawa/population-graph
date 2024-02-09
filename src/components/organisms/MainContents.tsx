@@ -1,16 +1,21 @@
-import { FC, memo, useEffect, useState } from "react";
-import { SelectedPopulationData } from "../../types/populationData";
+import { ChangeEventHandler, FC, memo, useEffect, useState } from "react";
+import {
+  PopulationData,
+  SelectedPopulationData,
+} from "../../types/populationData";
 import { PrefectureData } from "../../types/prefecturesData";
 import { getPrefectureNameByCode } from "../../utils/util";
+import { LoadingIndicator } from "../molecules/LoadingIndicator";
 import { PopulationGraph } from "./PopulationGraph";
 import { PopulationTypeSelectArea } from "./PopulationTypeSelectArea";
 import { PrefecturesSelectArea } from "./PrefecturesSelectArea";
-import { LoadingIndicator } from "../molecules/LoadingIndicator";
 
 export const MainContents: FC = memo(() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [prefectures, setPreFectures] = useState<PrefectureData | null>(null);
-  const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
+  const [selectedPrefectureCodes, setSelectedPrefectureCodes] = useState<
+    number[]
+  >([]);
   const [selectedPopulationType, setSelectedPopulationType] =
     useState<string>("");
   const [selectedPopulationDatas, setSelectedPopulationDatas] = useState<
@@ -30,18 +35,28 @@ export const MainContents: FC = memo(() => {
         setPreFectures(data);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching prefectures data:", error);
+        console.error("データの取得に失敗しました");
       }
     };
 
     fetchData();
   }, []);
 
+  /**
+   * 指定した都道府県の人口データ取得
+   * @param prefCode
+   * @returns
+   */
+  const fetchPopulationData = async (prefCode: number) => {
+    const response = await fetch(`/api/population?prefCode=${prefCode}`);
+    return (await response.json()) as PopulationData;
+  };
+
   const handleToggleCheckbox = (prefCode: number) => {
-    const isSelected = selectedPrefectures.includes(prefCode);
+    const isSelected = selectedPrefectureCodes.includes(prefCode);
     if (isSelected) {
-      setSelectedPrefectures(
-        selectedPrefectures.filter((code) => code !== prefCode)
+      setSelectedPrefectureCodes(
+        selectedPrefectureCodes.filter((code) => code !== prefCode)
       );
 
       // 取得データからチェックを解除したデータを除外
@@ -51,40 +66,36 @@ export const MainContents: FC = memo(() => {
             selectedPopulationData.prefCode !== prefCode
         )
       );
-    } else {
-      setSelectedPrefectures([...selectedPrefectures, prefCode]);
-
-      // チェックをつけた都道府県のデータを取得
-      const apiUrl = `/api/population?prefCode=${prefCode}`;
-
-      const fetchData = async () => {
-        try {
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-          const prefName = prefectures
-            ? getPrefectureNameByCode(prefectures, prefCode)
-            : "";
-
-          const populationData: SelectedPopulationData = {
-            prefCode: prefCode,
-            prefName: prefName,
-            data: data,
-          };
-          setSelectedPopulationDatas([
-            ...selectedPopulationDatas,
-            populationData,
-          ]);
-        } catch (error) {
-          console.error("Error fetching population data:", error);
-        }
-      };
-
-      fetchData();
     }
+
+    setSelectedPrefectureCodes([...selectedPrefectureCodes, prefCode]);
+    // チェックをつけた都道府県のデータを取得
+    const fetchData = async () => {
+      try {
+        const data = await fetchPopulationData(prefCode);
+        const prefName = prefectures
+          ? getPrefectureNameByCode(prefectures, prefCode)
+          : "";
+
+        const populationData: SelectedPopulationData = {
+          prefCode: prefCode,
+          prefName: prefName,
+          data: data,
+        };
+        setSelectedPopulationDatas([
+          ...selectedPopulationDatas,
+          populationData,
+        ]);
+      } catch (error) {
+        console.error("Error fetching population data:", error);
+      }
+    };
+
+    fetchData();
   };
 
-  const handleCheckRadioButton = (selectedPopulationType: string) => {
-    setSelectedPopulationType(selectedPopulationType);
+  const handleCheckRadioButton: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSelectedPopulationType(e.target.value);
   };
 
   return (
@@ -94,7 +105,7 @@ export const MainContents: FC = memo(() => {
       ) : (
         <PrefecturesSelectArea
           prefectureData={prefectures}
-          selectedPrefectures={selectedPrefectures}
+          selectedPrefectures={selectedPrefectureCodes}
           onChange={handleToggleCheckbox}
         />
       )}
