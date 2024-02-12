@@ -9,6 +9,7 @@ import { LoadingIndicator } from "../molecules/LoadingIndicator";
 
 export const MainContents: FC = memo(() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCheckSelecting, setIsCheckSelecting] = useState<boolean>(false);
   const [prefectures, setPreFectures] = useState<PrefectureData | null>(null);
   const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
   const [selectedPopulationType, setSelectedPopulationType] =
@@ -38,7 +39,10 @@ export const MainContents: FC = memo(() => {
   }, []);
 
   const handleToggleCheckbox = (prefCode: number) => {
+    if (isCheckSelecting) return;
+
     const isSelected = selectedPrefectures.includes(prefCode);
+    setIsCheckSelecting(true);
     if (isSelected) {
       setSelectedPrefectures(
         selectedPrefectures.filter((code) => code !== prefCode)
@@ -81,6 +85,8 @@ export const MainContents: FC = memo(() => {
 
       fetchData();
     }
+
+    setIsCheckSelecting(false);
   };
 
   const handleCheckRadioButton = (selectedPopulationType: string) => {
