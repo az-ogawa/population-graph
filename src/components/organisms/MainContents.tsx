@@ -53,6 +53,8 @@ export const MainContents: FC = memo(() => {
             selectedPopulationData.prefCode !== prefCode
         )
       );
+
+      setIsCheckSelecting(false);
     } else {
       setSelectedPrefectures([...selectedPrefectures, prefCode]);
 
@@ -76,6 +78,7 @@ export const MainContents: FC = memo(() => {
             ...selectedPopulationDatas,
             populationData,
           ]);
+          setIsCheckSelecting(false);
         } catch (error) {
           console.error("Error fetching population data:", error);
         }
@@ -83,8 +86,6 @@ export const MainContents: FC = memo(() => {
 
       fetchData();
     }
-
-    setIsCheckSelecting(false);
   };
 
   const handleCheckRadioButton = (selectedPopulationType: string) => {
