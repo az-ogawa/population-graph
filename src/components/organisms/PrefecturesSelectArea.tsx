@@ -6,11 +6,13 @@ import { PrefectureData } from "../../types/prefecturesData";
 type PrefectureProps = {
   prefectureData: PrefectureData | null;
   selectedPrefectures: number[];
+  isCheckSelecting: boolean;
   onChange: (prefCode: number) => void;
 };
 
 export const PrefecturesSelectArea: FC<PrefectureProps> = memo((props) => {
-  const { prefectureData, selectedPrefectures, onChange } = props;
+  const { prefectureData, selectedPrefectures, isCheckSelecting, onChange } =
+    props;
   return (
     <>
       <AreaTitleLabel>都道府県</AreaTitleLabel>
@@ -22,6 +24,7 @@ export const PrefecturesSelectArea: FC<PrefectureProps> = memo((props) => {
               key={prefecture.prefCode}
               prefCode={prefecture.prefCode}
               value={prefecture.prefName}
+              disabled={isCheckSelecting}
               onChange={onChange}
               checked={selectedPrefectures.includes(prefecture.prefCode)}
             />

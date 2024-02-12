@@ -39,8 +39,6 @@ export const MainContents: FC = memo(() => {
   }, []);
 
   const handleToggleCheckbox = (prefCode: number) => {
-    if (isCheckSelecting) return;
-
     const isSelected = selectedPrefectures.includes(prefCode);
     setIsCheckSelecting(true);
     if (isSelected) {
@@ -101,6 +99,7 @@ export const MainContents: FC = memo(() => {
         <PrefecturesSelectArea
           prefectureData={prefectures}
           selectedPrefectures={selectedPrefectures}
+          isCheckSelecting={isCheckSelecting}
           onChange={handleToggleCheckbox}
         />
       )}
